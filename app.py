@@ -126,19 +126,18 @@ def summary_start(start):
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
-    """Return a list of """
+    """Return the min, max, and avg temperatures after a given start date"""
     # Query 
     q = (
         Query(Measurement)
         .filter(Measurement.date >= start)
         .with_session(session)
-        .with_entities(Measurement.date,
-                       func.min(Measurement.tobs), 
+        .with_entities(func.min(Measurement.tobs), 
                        func.max(Measurement.tobs), 
                        func.avg(Measurement.tobs))
         .all()
     )
-    results = {y[0]:{"TMin":y[1], "TMax":y[2], "TAvg":y[3]} for y in q}
+    results = [{"TMin":y[0], "TMax":y[1], "TAvg":y[2]} for y in q]
     
     session.close()
 
@@ -149,20 +148,19 @@ def summary_startend(start, end):
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
-    """Return a list of """
+    """Return the min, max, and avg temperatures between two specified dates"""
     # Query 
     q = (
         Query(Measurement)
         .filter(Measurement.date >= start,
                Measurement.date <= end)
         .with_session(session)
-        .with_entities(Measurement.date,
-                       func.min(Measurement.tobs), 
+        .with_entities(func.min(Measurement.tobs), 
                        func.max(Measurement.tobs), 
                        func.avg(Measurement.tobs))
         .all()
     )
-    results = {y[0]:{"TMin":y[1], "TMax":y[2], "TAvg":y[3]} for y in q}
+    results = [{"TMin":y[0], "TMax":y[1], "TAvg":y[2]} for y in q]
     
     session.close()
 
